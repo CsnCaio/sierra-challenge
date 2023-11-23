@@ -1,5 +1,5 @@
 import { SecurityUtil } from "src/utils/security.util";
-import { MigrationInterface, QueryRunner } from "typeorm"
+import { MigrationInterface, QueryRunner } from "typeorm";
 
 export class SeedFirstUser1700678915982 implements MigrationInterface {
     name = 'SeedFirstUser1700678915982'

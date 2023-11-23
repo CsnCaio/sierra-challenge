@@ -20,7 +20,6 @@ async function runMigrations() {
 
 async function startHttpServer() {
   console.log('============== START SERVER ==============');
-  const appVersion = '2';
   app = await NestFactory.create(AppModule, {
     logger: ['error'],
   });
@@ -31,10 +30,6 @@ async function startHttpServer() {
       whitelist: true,
     }),
   );
-  app.enableVersioning({
-    defaultVersion: appVersion,
-    type: VersioningType.URI,
-  });
   await app.listen(3000);
   console.log('============== SERVER STARTED ==============');
 }
