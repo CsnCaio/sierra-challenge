@@ -23,12 +23,8 @@ test.group('Warehouse e2e', (group) => {
       currentInventory: faker.number.int({ min: 1, max: 100 }),
       isActive: true,
       address: {
-        zip: faker.location.zipCode(),
-        city: faker.location.city(),
-        number: Number(faker.location.buildingNumber()),
-        state: faker.location.state(),
-        street: faker.location.streetAddress(),
-        country: faker.location.country(),
+        latitude: faker.location.latitude().toString(),
+        longitude: faker.location.longitude().toString(),
       }
     };
   });
@@ -68,12 +64,8 @@ test.group('Warehouse e2e', (group) => {
         isActive: true,
         managerId: 1,
         address: {
-          zip: faker.location.zipCode(),
-          city: faker.location.city(),
-          number: Number(faker.location.buildingNumber()),
-          state: faker.location.state(),
-          street: faker.location.streetAddress(),
-          country: faker.location.country(),
+          latitude: faker.location.latitude().toString(),
+          longitude: faker.location.longitude().toString(),
         }
       });
     }
@@ -101,12 +93,8 @@ test.group('Warehouse e2e', (group) => {
       isActive: true,
       managerId: 1,
       address: {
-        zip: faker.location.zipCode(),
-        city: faker.location.city(),
-        number: Number(faker.location.buildingNumber()),
-        state: faker.location.state(),
-        street: faker.location.streetAddress(),
-        country: faker.location.country(),
+        latitude: faker.location.latitude().toString(),
+        longitude: faker.location.longitude().toString(),
       }
     });
 
@@ -148,12 +136,8 @@ test.group('Warehouse e2e', (group) => {
       isActive: true,
       managerId: 1,
       address: {
-        zip: faker.location.zipCode(),
-        city: faker.location.city(),
-        number: Number(faker.location.buildingNumber()),
-        state: faker.location.state(),
-        street: faker.location.streetAddress(),
-        country: faker.location.country(),
+        latitude: faker.location.latitude().toString(),
+        longitude: faker.location.longitude().toString(),
       }
     });
 
@@ -197,12 +181,8 @@ test.group('Warehouse e2e', (group) => {
       isActive: true,
       managerId: 1,
       address: {
-        zip: faker.location.zipCode(),
-        city: faker.location.city(),
-        number: Number(faker.location.buildingNumber()),
-        state: faker.location.state(),
-        street: faker.location.streetAddress(),
-        country: faker.location.country(),
+        latitude: faker.location.latitude().toString(),
+        longitude: faker.location.longitude().toString(),
       }
     });
 

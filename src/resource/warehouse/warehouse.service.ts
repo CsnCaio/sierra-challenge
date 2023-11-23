@@ -25,7 +25,10 @@ export class WarehouseService {
 
   async findOne(id: number) {
     try {
-      const warehouse = await this.repository.findOneOrFail({ where: { id } });
+      const warehouse = await this.repository.findOneOrFail({
+        where: { id },
+        relations: ['manager', 'address']
+      });
       return warehouse;
     } catch (error) {
       throw new NotFoundException('Warehouse not found');

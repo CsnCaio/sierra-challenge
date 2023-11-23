@@ -5,11 +5,14 @@ import { DeepPartial } from 'typeorm';
 import { CustomerRepository } from './customer.repository';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
+import { WarehouseService } from '../warehouse/warehouse.service';
+import { GeometryUtil } from 'src/utils/geometry.util';
 
 @Injectable()
 export class CustomerService {
   constructor(
     @InjectRepository(CustomerRepository) private readonly repository: CustomerRepository,
+    private readonly warehouseService: WarehouseService
   ) { }
 
   async create(createCustomerDto: CreateCustomerDto, userId: number) {
@@ -30,7 +33,7 @@ export class CustomerService {
 
   async findOne(id: number) {
     try {
-      const customer = await this.repository.findOneOrFail({ where: { id } });
+      const customer = await this.repository.findOneOrFail({ where: { id }, relations: ['address'] });
       return customer;
     } catch (error) {
       throw new NotFoundException('Customer not found');
@@ -53,5 +56,17 @@ export class CustomerService {
   async remove(id: number) {
     const customer = await this.findOne(id);
     return this.repository.remove(customer);
+  }
+
+  async getWarehouseDistance(customerId: number, warehouseId: number) {
+    const customer = await this.findOne(customerId);
+    const customerLatLng = { lat: +customer.address.latitude, lng: +customer.address.longitude };
+
+    const warehouse = await this.warehouseService.findOne(warehouseId);
+    const warehouseLatLng = { lat: +warehouse.address.latitude, lng: +warehouse.address.longitude };
+
+    const distance = GeometryUtil.getDistance(customerLatLng, warehouseLatLng);
+
+    return { distanceInMeters: distance };
   }
 }

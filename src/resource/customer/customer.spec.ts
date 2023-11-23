@@ -5,6 +5,7 @@ import { dataSource } from 'src/database/data-source';
 import { Customer } from 'src/database/entities/customer.entity';
 import { Repository } from 'typeorm';
 import { CreateCustomerDto } from './dto/create-customer.dto';
+import { Warehouse } from 'src/database/entities/warehouse.entity';
 
 test.group('Customer e2e', (group) => {
   const url = `${process.env.BASE_URL}/customer`;
@@ -22,12 +23,8 @@ test.group('Customer e2e', (group) => {
       email: faker.internet.email(),
       birthDate: faker.date.birthdate({ min: 18, max: 65, mode: 'age' }).toISOString().split('T')[0],
       address: {
-        zip: faker.location.zipCode(),
-        city: faker.location.city(),
-        number: Number(faker.location.buildingNumber()),
-        state: faker.location.state(),
-        street: faker.location.streetAddress(),
-        country: faker.location.country(),
+        latitude: faker.location.latitude().toString(),
+        longitude: faker.location.longitude().toString(),
       }
     };
   });
@@ -66,12 +63,8 @@ test.group('Customer e2e', (group) => {
       birthDate: faker.date.past(),
       createdById: 1,
       address: {
-        zip: faker.location.zipCode(),
-        city: faker.location.city(),
-        number: Number(faker.location.buildingNumber()),
-        state: faker.location.state(),
-        street: faker.location.streetAddress(),
-        country: faker.location.country(),
+        latitude: faker.location.latitude().toString(),
+        longitude: faker.location.longitude().toString(),
       }
     });
 
@@ -101,12 +94,8 @@ test.group('Customer e2e', (group) => {
         birthDate: faker.date.past(),
         createdById: 1,
         address: {
-          zip: faker.location.zipCode(),
-          city: faker.location.city(),
-          number: Number(faker.location.buildingNumber()),
-          state: faker.location.state(),
-          street: faker.location.streetAddress(),
-          country: faker.location.country(),
+          latitude: faker.location.latitude().toString(),
+          longitude: faker.location.longitude().toString(),
         }
       });
     }
@@ -133,12 +122,8 @@ test.group('Customer e2e', (group) => {
       birthDate: faker.date.past(),
       createdById: 1,
       address: {
-        zip: faker.location.zipCode(),
-        city: faker.location.city(),
-        number: Number(faker.location.buildingNumber()),
-        state: faker.location.state(),
-        street: faker.location.streetAddress(),
-        country: faker.location.country(),
+        latitude: faker.location.latitude().toString(),
+        longitude: faker.location.longitude().toString(),
       }
     });
 
@@ -179,12 +164,8 @@ test.group('Customer e2e', (group) => {
       birthDate: faker.date.past(),
       createdById: 1,
       address: {
-        zip: faker.location.zipCode(),
-        city: faker.location.city(),
-        number: Number(faker.location.buildingNumber()),
-        state: faker.location.state(),
-        street: faker.location.streetAddress(),
-        country: faker.location.country(),
+        latitude: faker.location.latitude().toString(),
+        longitude: faker.location.longitude().toString(),
       }
     });
 
@@ -227,12 +208,8 @@ test.group('Customer e2e', (group) => {
       birthDate: faker.date.past(),
       createdById: 1,
       address: {
-        zip: faker.location.zipCode(),
-        city: faker.location.city(),
-        number: Number(faker.location.buildingNumber()),
-        state: faker.location.state(),
-        street: faker.location.streetAddress(),
-        country: faker.location.country(),
+        latitude: faker.location.latitude().toString(),
+        longitude: faker.location.longitude().toString(),
       }
     });
 
@@ -248,5 +225,45 @@ test.group('Customer e2e', (group) => {
 
     const deletedCustomer = await repo.findOne({ where: { id: customer.id } });
     assert.isNull(deletedCustomer);
+  });
+
+  test('Should get the distance between a customer and a warehouse', async ({ assert }) => {
+    const customer = await repo.save({
+      name: faker.person.fullName(),
+      email: faker.internet.email(),
+      birthDate: faker.date.past(),
+      createdById: 1,
+      address: {
+        latitude: '-23.5964403',
+        longitude: '-46.7429449',
+      }
+    });
+
+    const warehouseRepo = dataSource.createEntityManager().getRepository(Warehouse);
+    const warehouse = await warehouseRepo.save({
+      name: faker.company.name(),
+      capacity: faker.number.int({ min: 1, max: 100 }),
+      currentInventory: faker.number.int({ min: 1, max: 100 }),
+      isActive: true,
+      managerId: 1,
+      address: {
+        latitude: '-23.5955148',
+        longitude: '-46.7402256',
+      }
+    });
+
+    const response = await fetch(`${url}/${customer.id}/warehouse-distance/${warehouse.id}`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${jwtToken}`
+      }
+    });
+
+    const body = await response.json();
+
+    assert.equal(response.status, HttpStatus.OK);
+    assert.isObject(body);
+    assert.isNumber(body.distanceInMeters);
   });
 });
