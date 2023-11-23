@@ -3,7 +3,9 @@ import {
   Entity,
   Index,
   JoinColumn,
-  OneToOne
+  ManyToOne,
+  OneToOne,
+  Unique
 } from 'typeorm';
 import { AbstractEntity } from './abstract/abstract.entity';
 import { Address } from './address.entity';
@@ -16,16 +18,26 @@ export class Customer extends AbstractEntity {
   name: string;
 
   @Column({ type: 'date' })
-  birthDate?: Date;
+  birthDate: Date;
 
   @Column({ unique: true, length: 254 })
+  @Unique('customer_email_unique', ['email'])
   email: string;
 
-  @OneToOne(() => Address)
-  @JoinColumn()
+  @Column()
+  addressId: number;
+
+  @OneToOne(() => Address, (table) => table.id, {
+    nullable: false,
+    cascade: ['insert', 'update', 'remove'],
+  })
+  @JoinColumn({ name: 'addressId' })
   address: Address;
 
-  @OneToOne(() => User)
-  @JoinColumn()
+  @Column()
+  createdById: number;
+
+  @ManyToOne(() => User, (table) => table.id)
+  @JoinColumn({ name: 'createdById' })
   createdBy: User;
 }

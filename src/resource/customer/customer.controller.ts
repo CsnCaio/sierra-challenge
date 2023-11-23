@@ -1,15 +1,20 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, Patch, Post } from '@nestjs/common';
+import { Jwt, jwtPayload } from '../auth/decorators/get-jwt.decorator';
 import { CustomerService } from './customer.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
 
 @Controller('customer')
 export class CustomerController {
-  constructor(private readonly customerService: CustomerService) {}
+  constructor(private readonly customerService: CustomerService) { }
 
   @Post()
-  create(@Body() createCustomerDto: CreateCustomerDto) {
-    return this.customerService.create(createCustomerDto);
+  @HttpCode(HttpStatus.CREATED)
+  create(
+    @Body() createCustomerDto: CreateCustomerDto,
+    @Jwt() jwt: jwtPayload
+  ) {
+    return this.customerService.create(createCustomerDto, jwt.id);
   }
 
   @Get()
@@ -23,8 +28,12 @@ export class CustomerController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCustomerDto: UpdateCustomerDto) {
-    return this.customerService.update(+id, updateCustomerDto);
+  update(
+    @Param('id') id: string,
+    @Body() updateCustomerDto: UpdateCustomerDto,
+    @Jwt() jwt: jwtPayload
+  ) {
+    return this.customerService.update(+id, updateCustomerDto, jwt.id);
   }
 
   @Delete(':id')

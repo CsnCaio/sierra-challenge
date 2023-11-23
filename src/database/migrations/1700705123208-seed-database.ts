@@ -1,9 +1,7 @@
 import { SecurityUtil } from "src/utils/security.util";
 import { MigrationInterface, QueryRunner } from "typeorm";
 
-export class SeedFirstUser1700678915982 implements MigrationInterface {
-    name = 'SeedFirstUser1700678915982'
-
+export class SeedDatabase1700705123208 implements MigrationInterface {
     public async up(queryRunner: QueryRunner): Promise<void> {
         const password = await SecurityUtil.hash('sierra@123456#');
 

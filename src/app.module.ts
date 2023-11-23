@@ -7,6 +7,8 @@ import { UserModule } from './resource/user/user.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './resource/auth/auth.guard';
 import { AuthModule } from './resource/auth/auth.module';
+import { CustomerModule } from './resource/customer/customer.module';
+import { WarehouseModule } from './resource/warehouse/warehouse.module';
 
 @Module({
   imports: [
@@ -18,7 +20,9 @@ import { AuthModule } from './resource/auth/auth.module';
       },
     }),
     UserModule,
-    AuthModule
+    AuthModule,
+    CustomerModule,
+    WarehouseModule
   ],
   providers: [
     {

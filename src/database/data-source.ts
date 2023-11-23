@@ -4,8 +4,8 @@ import { Address } from './entities/address.entity';
 import { Customer } from './entities/customer.entity';
 import { User } from './entities/user.entity';
 import { Warehouse } from './entities/warehouse.entity';
-import { ConfigDatabase1700677709327 } from './migrations/1700677709327-config-database';
-import { SeedFirstUser1700678915982 } from './migrations/1700678915982-seed-first-user';
+import { ConfigDatabase1700705114476 } from './migrations/1700705114476-config-database';
+import { SeedDatabase1700705123208 } from './migrations/1700705123208-seed-database';
 
 const type = process.env.TYPEORM_CONNECTION as DatabaseType as any; // Sometimes TS sucks
 const host = process.env.TYPEORM_HOST;
@@ -27,7 +27,7 @@ const options: DataSourceOptions = {
     User,
     Warehouse
   ],
-  migrations: [ConfigDatabase1700677709327, SeedFirstUser1700678915982],
+  migrations: [ConfigDatabase1700705114476, SeedDatabase1700705123208],
   synchronize: false,
   logging: false,
   ssl: process.env.SSL_CERT
